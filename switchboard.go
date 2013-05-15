@@ -41,7 +41,7 @@ const (
 type Switchboard map[string]interface{}
 
 func (s Switchboard) handlePage(target string, w http.ResponseWriter,
-		r *http.Request, path string) {
+	r *http.Request, path string) {
 	var url string
 	if strings.Contains(target, "%s") {
 		url = fmt.Sprintf(target, path)
@@ -53,7 +53,7 @@ func (s Switchboard) handlePage(target string, w http.ResponseWriter,
 }
 
 func (s Switchboard) handlePath(pathMap map[string]interface{},
-		w http.ResponseWriter, r *http.Request, path string) {
+	w http.ResponseWriter, r *http.Request, path string) {
 	pathParts := strings.SplitN(path, "/", 2)
 	var pathHead, pathTail string
 	if len(pathParts) >= 1 {
@@ -68,7 +68,7 @@ func (s Switchboard) handlePath(pathMap map[string]interface{},
 	} else {
 		i, ok = pathMap["*"]
 		if ok {
-			s.handleBranch(i, w, r, pathTail)
+			s.handleBranch(i, w, r, path)
 		} else {
 			s.handleDefault(w)
 		}
@@ -76,7 +76,7 @@ func (s Switchboard) handlePath(pathMap map[string]interface{},
 }
 
 func (s Switchboard) handleBranch(i interface{}, w http.ResponseWriter,
-		r *http.Request, path string) {
+	r *http.Request, path string) {
 	switch v := i.(type) {
 	case string:
 		s.handlePage(v, w, r, path)
@@ -84,7 +84,7 @@ func (s Switchboard) handleBranch(i interface{}, w http.ResponseWriter,
 		s.handlePath(v, w, r, path)
 	default:
 		log.Fatalf("Unexpected type in path map: %s",
-				reflect.TypeOf(i).String())
+			reflect.TypeOf(i).String())
 	}
 }
 
@@ -129,18 +129,18 @@ func main() {
 	// Read the configuration file
 	var configFilename string
 	flag.StringVar(&configFilename, "f", DefaultConfigFilename,
-			"configuration file")
+		"configuration file")
 	flag.Parse()
 	configFile, err := ioutil.ReadFile(configFilename)
 	if err != nil {
 		log.Fatalf("Error reading configuration file %s: %s", configFilename,
-				err.Error())
+			err.Error())
 	}
 	var configBlob interface{}
 	err = json.Unmarshal(configFile, &configBlob)
 	if err != nil {
 		log.Fatalf("Error parsing configuration file %s: %s", configFilename,
-				err.Error())
+			err.Error())
 	}
 	config := configBlob.(map[string]interface{})
 
@@ -158,7 +158,7 @@ func main() {
 	hostBlob, ok := config["hosts"]
 	if !ok {
 		log.Fatalf("Error parsing configuration file %s: Missing hosts",
-				configFilename)
+			configFilename)
 	}
 	hostMap := Switchboard(hostBlob.(map[string]interface{}))
 
