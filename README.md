@@ -32,8 +32,8 @@ Installation
 - If using the Upstart script, or running switchboard as non-root otherwise,
   allow switchboard to bind ports under 1024:
 
-    sudo apt-get install libcap2-bin
-    sudo setcap cap_net_bind_service+ep /usr/local/bin/switchboard
+        sudo apt-get install libcap2-bin
+        sudo setcap cap_net_bind_service+ep /usr/local/bin/switchboard
 
 - If using the included Upstart script and want to start Switchboard,
   run `service switchboard start` as root.
