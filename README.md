@@ -16,30 +16,54 @@ Requirements
 ============
 
 - Go 1.1 or later.
-- Understanding what DNS is.
+- A local server on which port 80 is available (possibly `localhost`).
+- The ability to add hostnames mapping to this server (via DNS or
+  `/etc/hosts`).
 
 Installation
 ============
 
+Install the binary and configuration file:
+
 - `go install github.com/nixprime/switchboard`. This builds a `bin/switchboard`
   somewhere in your $GOPATH, which you can move to wherever. (The included
-  Upstart script assumes `switchboard` is located in `/usr/local/bin/`.)
+  system startup scripts assume `switchboard` is located in `/usr/local/bin/`.)
 - Create `switchboard.conf` somewhere. Use the included `switchboard.conf` as a
   guide. (By default, Switchboard assumes that `switchboard.conf` is located in
   `/etc/`.)
-- If you want to use the included Upstart script to start Switchboard
-  automatically, put `upstart/switchboard.conf` in `/etc/init/`.
-- If using the Upstart script, or running switchboard as non-root otherwise,
-  allow switchboard to bind ports under 1024:
+
+Enable the daemon to run as a non-root user:
+
+- If using one of the system startup scripts, or running switchboard as
+  non-root otherwise, allow switchboard to bind ports under 1024:
 
         sudo apt-get install libcap2-bin
         sudo setcap cap_net_bind_service+ep /usr/local/bin/switchboard
 
-- If using the included Upstart script and want to start Switchboard,
-  run `service switchboard start` as root.
-- Configure DNS to point whatever hostname(s) you want Switchboard to use to
-  the IP address of the machine running Switchboard. How to do so is beyond the
-  scope of this document.
+Enable automatic start at boot:
+
+- If your system uses Upstart (e.g., Ubuntu prior to 15.04), and you want to
+  use the included Upstart script to start Switchboard automatically, put
+  `upstart/switchboard.conf` in `/etc/init/`. The daemon will now start on the
+  next boot. To start it manually, run `service switchboard start` as root.
+
+- If your system uses systemd (e.g., Arch Linux or Fedora, or Ubuntu 15.04 or
+  later), and you want to use the included systemd script to start Switchboard
+  automatically, put `systemd/switchboard.service` in
+  `/usr/lib/systemd/system`. To enable the service on boot, run `systemctl
+  enable switchboard` as root. To start the service manually, run `systemctl
+  start switchboard` as root.
+
+Configure hostname resolution:
+
+- Configure either your host's local hostname resolution (e.g., the
+  `/etc/hosts` file) or your local DNS zone, if applicable, to point whatever
+  hostname(s) you want Switchboard to use to the IP address of the machine
+  running Switchboard. How to configure DNS is beyond the scope of this
+  document. A simple set of entries in `/etc/hosts` might be:
+
+        127.0.0.1  s  # map `s` hostname to Switchboard on localhost
+        127.0.0.1  m  # map `m` hostname to Switchboard on localhost
 
 License
 =======
