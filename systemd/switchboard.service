@@ -1,0 +1,10 @@
+[Unit]
+Description=Switchboard redirect server
+After=network.service
+
+[Service]
+ExecStart=/usr/local/bin/switchboard
+User=nobody
+
+[Install]
+WantedBy=default.target
