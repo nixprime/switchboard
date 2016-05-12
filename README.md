@@ -28,9 +28,18 @@ Install the binary and configuration file:
 - `go install github.com/nixprime/switchboard`. This builds a `bin/switchboard`
   somewhere in your $GOPATH, which you can move to wherever. (The included
   system startup scripts assume `switchboard` is located in `/usr/local/bin/`.)
+
 - Create `switchboard.conf` somewhere. Use the included `switchboard.conf` as a
   guide. (By default, Switchboard assumes that `switchboard.conf` is located in
   `/etc/`.)
+
+  Note that the default configuration instructs the daemon to listen
+  on port 80, the standard HTTP port (so your host should not be running some
+  other HTTP server), and to listen only on the `localhost` interface (so the
+  Switchboard service will not be accessible from other hosts). Change these
+  settings with the `port` and `listen_on` configuration file keys,
+  respectively. Setting `listen_on` to the empty string (`"listen_on": ""`)
+  will instruct the daemon to accept connections from any network.
 
 Enable the daemon to run as a non-root user:
 
