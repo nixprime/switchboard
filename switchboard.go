@@ -144,15 +144,23 @@ func main() {
 	}
 	config := configBlob.(map[string]interface{})
 
-	// Select the port to listen on
+	// Select the TCP address (interface and port) to listen on
+	var listenOn string
 	var port uint16
+
+	listenOnConfigBlob, ok := config["listen_on"]
+	if ok {
+		listenOn = listenOnConfigBlob.(string)
+	} else {
+		listenOn = ""
+	}
 	portConfigBlob, ok := config["port"]
 	if ok {
 		port = uint16(portConfigBlob.(float64))
 	} else {
 		port = DefaultPort
 	}
-	portStr := strconv.FormatUint(uint64(port), 10)
+	listenAddr := listenOn + ":" + strconv.FormatUint(uint64(port), 10)
 
 	// Read the host map
 	hostBlob, ok := config["hosts"]
@@ -164,7 +172,7 @@ func main() {
 
 	// Start the server
 	http.HandleFunc("/", hostMap.HandleHost)
-	err = http.ListenAndServe(":"+portStr, nil)
+	err = http.ListenAndServe(listenAddr, nil)
 	if err != nil {
 		log.Fatalf("ListenAndServe: %s", err.Error())
 	}
