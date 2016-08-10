@@ -79,7 +79,7 @@ License
 
 Switchboard is provided under the MIT license:
 
-> Copyright (C) 2013 Jamie Liu
+> Copyright (C) 2013 the Authors
 >
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the “Software”), to deal
